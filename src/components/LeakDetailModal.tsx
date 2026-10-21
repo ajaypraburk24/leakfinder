@@ -55,22 +55,18 @@ export const LeakDetailModal: React.FC<LeakDetailModalProps> = ({
     setChatLoading(true);
 
     try {
-      const res = await fetch('/api/chat-advisor', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question: q,
-          leakContext: {
-            category: leak.category,
-            name: leak.name,
-            detectedAmount: leak.detectedAmount,
-            topAffectedItem: leak.topAffectedItem,
-            evidence: leak.sampleEvidence,
-          },
-        }),
+      const { askNemotronAdvisor } = await import('../utils/aiService');
+      const data = await askNemotronAdvisor({
+        question: q,
+        leakContext: {
+          category: leak.category,
+          name: leak.name,
+          detectedAmount: leak.detectedAmount,
+          topAffectedItem: leak.topAffectedItem,
+          evidence: leak.sampleEvidence,
+        },
       });
 
-      const data = await res.json();
       setChatMessages((prev) => [
         ...prev,
         {
@@ -94,20 +90,16 @@ export const LeakDetailModal: React.FC<LeakDetailModalProps> = ({
   const handleTriggerReanalyze = async () => {
     setIsReanalyzing(true);
     try {
-      const res = await fetch('/api/analyze-leak', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          leakType: leak.category,
-          amount: leak.detectedAmount,
-          title: leak.name,
-          evidence: {
-            topAffectedItem: leak.topAffectedItem,
-            sampleEvidence: leak.sampleEvidence,
-          },
-        }),
+      const { analyzeLeakWithNemotron } = await import('../utils/aiService');
+      const data = await analyzeLeakWithNemotron({
+        leakType: leak.category,
+        amount: leak.detectedAmount,
+        title: leak.name,
+        evidence: {
+          topAffectedItem: leak.topAffectedItem,
+          sampleEvidence: leak.sampleEvidence,
+        },
       });
-      const data = await res.json();
       if (data.analysis) {
         setLiveReasoning(data.analysis);
       }
