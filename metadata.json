@@ -1,0 +1,6 @@
+{
+  "name": "LeakFinder AI — Business Revenue Leak Detector",
+  "description": "AI-powered revenue leak detection & action system connecting sales, discounts, returns, delivery, and pricing signals using NVIDIA Nemotron reasoning.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
